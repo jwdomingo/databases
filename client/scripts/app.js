@@ -10,7 +10,7 @@ var app = {
 
   init: function() {
     // Get username
-    app.username = window.location.search.substr(10) || 'John Domingo';
+    app.username = '';
 
     // Cache jQuery selectors
     app.$main = $('#main');
@@ -18,11 +18,15 @@ var app = {
     app.$chats = $('#chats');
     app.$roomSelect = $('#roomSelect');
     app.$send = $('#send');
+    app.$user = $('#username');
 
     // Add listeners
     app.$main.on('click', '.username', app.addFriend);
     app.$send.on('submit', app.handleSubmit);
     app.$roomSelect.on('change', app.saveRoom);
+    app.$user.on('focusout', function(e) {
+      app.createNewUser( e.target.value );
+    });
 
     // Fetch previous messages
     app.startSpinner();
@@ -30,6 +34,24 @@ var app = {
 
     // Poll for new messages
     setInterval(app.fetch, 3000);
+  },
+
+  createNewUser: function(input) {
+    $.ajax({
+      url: app.server + '/users',
+      type: 'POST',
+      data: JSON.stringify(input),
+      contentType: 'application/json',
+      success: function (data) {
+        console.log('DAAAAAAAAAA=================TA: ', data);
+        app.$user.attr('data-userID', data);
+        app.username = app.$user.val();
+      },
+      error: function (data) {
+        app.stopSpinner();
+        console.error('chatterbox: Failed to create user');
+      }
+    });
   },
 
   send: function(data) {
