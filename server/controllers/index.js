@@ -1,19 +1,15 @@
 var models = require('../models');
 var mysql = require('mysql');
-var db = require('./../db/index.js');
+var db = require('./../db');
 
 db.connection.connect();
 
 module.exports = {
   messages: {
     get: function (req, res) {
-      // Fetch messages from database
-      // Send data containing messages, usernames + IDs, roomnames + IDs to model handlers
-      var sql = 'SELECT * FROM messages';
-      db.connection.query(sql, function(err, rows, fields) {
+      models.messages.get(function(err, data) {
         if (err) { throw err; };
-        console.log('GET MSGS!!!!!!!!!',rows);
-        res.end();
+        res.send(data);
       });
     },
 
