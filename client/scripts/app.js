@@ -25,7 +25,7 @@ var app = {
     app.$send.on('submit', app.handleSubmit);
     app.$roomSelect.on('change', app.saveRoom);
     app.$user.on('focusout', function(e) {
-      app.createNewUser( e.target.value );
+      app.createNewUser( {username: e.target.value} );
     });
 
     // Fetch previous messages
@@ -44,8 +44,7 @@ var app = {
       contentType: 'application/json',
       success: function (data) {
         console.log('DAAAAAAAAAA=================TA: ', data);
-        app.$user.attr('data-userID', data);
-        app.username = app.$user.val();
+        app.username = data;
       },
       error: function (data) {
         app.stopSpinner();
@@ -67,6 +66,7 @@ var app = {
       contentType: 'application/json',
       success: function (data) {
         // Trigger a fetch to update the messages, pass true to animate
+        console.log("DID IT!");
         app.fetch();
       },
       error: function (data) {

@@ -3,21 +3,31 @@ var db = require('../db');
 module.exports = {
   messages: {
     get: function (callback) {
-      console.log('MODELS RECIEVES RE#UEST');
       var sql = 'SELECT * FROM messages';
       return db.connection.query(sql, function(err, rows, fields) {
         if (err) { throw err; }
         callback(err, rows);
       });
     },
-    post: function () {
-
-    } // a function which can be used to insert a message into the database
+    post: function (req, callback) {
+      var sql = 'INSERT INTO messages SET ?';
+      db.connection.query(sql, req.body, function(err, rows, fields) {
+        if (err) { throw err; }
+        callback(err, rows.insertID);
+      });
+    }
   },
 
   users: {
-    // Ditto as above.
-    get: function () {},
-    post: function () {}
+    get: function (callback) {
+
+    },
+    post: function (username, callback) {
+      var sql = 'INSERT INTO users SET ?'
+      db.connection.query(sql, username, function(err, rows, fields) {
+        if (err) { throw err; };
+        callback(err, rows.insertId);
+      });
+    }
   }
 };
