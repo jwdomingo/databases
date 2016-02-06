@@ -43,7 +43,6 @@ var app = {
       data: JSON.stringify(input),
       contentType: 'application/json',
       success: function (data) {
-        console.log('DAAAAAAAAAA=================TA: ', data);
         app.username = data;
       },
       error: function (data) {
@@ -66,8 +65,7 @@ var app = {
       contentType: 'application/json',
       success: function (data) {
         // Trigger a fetch to update the messages, pass true to animate
-        console.log("DID IT!");
-        app.fetch(true);
+        app.fetch();
       },
       error: function (data) {
         app.stopSpinner();
@@ -93,8 +91,7 @@ var app = {
         var mostRecentMessage = messages[messages.length - 1];
         var displayedRoom = $('.chat span').first().data('roomname');
         app.stopSpinner();
-        console.log('mostRecentMessage:',mostRecentMessage);
-        console.log('displayedRoom:',displayedRoom);
+
         // Only bother updating the DOM if we have a new message
         if (mostRecentMessage.objectId !== app.lastMessageId || app.roomname !== displayedRoom) {
           // Update the UI with the fetched rooms
@@ -120,7 +117,6 @@ var app = {
 
   populateMessages: function(messages, animate) {
     // Clear existing messages
-
     app.clearMessages();
     app.stopSpinner();
     if (Array.isArray(messages)) {
@@ -176,7 +172,7 @@ var app = {
     // Only add messages that are in our current room
     if (data.roomname === app.roomname) {
       // Create a div to hold the chats
-      var $chat = $('<div class="chat"/>');
+      var $chat = $('<div class="chat"/>').attr('data-messageID', data.id);
 
       // Add in the message data using DOM methods to avoid XSS
       // Store the username in the element's data
@@ -189,7 +185,7 @@ var app = {
       }
 
       var $message = $('<br><span/>');
-      $message.text(data.text).appendTo($chat);
+      $message.text(data.message).appendTo($chat);
 
       // Add the message to the UI
       app.$chats.append($chat);
@@ -211,7 +207,6 @@ var app = {
   },
 
   saveRoom: function(evt) {
-
     var selectIndex = app.$roomSelect.prop('selectedIndex');
     // New room is always the first option
     if (selectIndex === 0) {
