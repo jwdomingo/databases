@@ -10,7 +10,7 @@ var app = {
 
   init: function() {
     // Get username
-    app.username = '';
+    app.username = 1;
 
     // Cache jQuery selectors
     app.$main = $('#main');
@@ -67,7 +67,7 @@ var app = {
       success: function (data) {
         // Trigger a fetch to update the messages, pass true to animate
         console.log("DID IT!");
-        app.fetch();
+        app.fetch(true);
       },
       error: function (data) {
         app.stopSpinner();
@@ -82,24 +82,26 @@ var app = {
       type: 'GET',
       contentType: 'application/json',
       // data: { order: '-createdAt'},
-      success: function(data) {
+      success: function(messages) {
         // Don't bother if we have nothing to work with
-        if (!data.results || !data.results.length) {
+        if (!messages || !messages.length) {
           app.stopSpinner();
           return;
         }
 
         // Get the last message
-        var mostRecentMessage = data.results[data.results.length-1];
+        var mostRecentMessage = messages[messages.length - 1];
         var displayedRoom = $('.chat span').first().data('roomname');
         app.stopSpinner();
+        console.log('mostRecentMessage:',mostRecentMessage);
+        console.log('displayedRoom:',displayedRoom);
         // Only bother updating the DOM if we have a new message
         if (mostRecentMessage.objectId !== app.lastMessageId || app.roomname !== displayedRoom) {
           // Update the UI with the fetched rooms
-          app.populateRooms(data.results);
+          app.populateRooms(messages);
 
           // Update the UI with the fetched messages
-          app.populateMessages(data.results, animate);
+          app.populateMessages(messages, animate);
 
           // Store the ID of the most recent message
           app.lastMessageId = mostRecentMessage.objectId;
@@ -116,14 +118,14 @@ var app = {
     app.$chats.html('');
   },
 
-  populateMessages: function(results, animate) {
+  populateMessages: function(messages, animate) {
     // Clear existing messages
 
     app.clearMessages();
     app.stopSpinner();
-    if (Array.isArray(results)) {
+    if (Array.isArray(messages)) {
       // Add all fetched messages
-      results.forEach(app.addMessage);
+      messages.forEach(app.addMessage);
     }
 
     // Make it scroll to the bottom
