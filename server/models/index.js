@@ -4,14 +4,14 @@ module.exports = {
   messages: {
     get: function (callback) {
       var sql = 'SELECT * FROM messages';
-      return db.connection.query(sql, function(err, rows, fields) {
+      db.connection.query(sql, function(err, rows, fields) {
         if (err) { throw err; }
         callback(err, rows);
       });
     },
-    post: function (req, callback) {
+    post: function (message, callback) {
       var sql = 'INSERT INTO messages SET ?';
-      db.connection.query(sql, req.body, function(err, rows, fields) {
+      db.connection.query(sql, message, function(err, rows, fields) {
         if (err) { throw err; }
         callback(err, rows.insertID);
       });
