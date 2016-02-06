@@ -18,9 +18,9 @@ CREATE TABLE messages (
   username VARCHAR(255) NOT NULL,
   roomname VARCHAR(255) NOT NULL,
   message VARCHAR(255) NOT NULL,
-  PRIMARY KEY (id),
+  PRIMARY KEY (id)/*,
   FOREIGN KEY (id) REFERENCES users(id),
-  FOREIGN KEY (id) REFERENCES rooms(id)
+  FOREIGN KEY (id) REFERENCES rooms(id)*/
 );
 
 /*  Execute this file from the command line by typing:
