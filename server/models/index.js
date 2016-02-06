@@ -3,7 +3,9 @@ var db = require('../db');
 module.exports = {
   messages: {
     get: function (callback) {
-      var sql = 'SELECT * FROM messages';
+
+      var sql = 'SELECT m.id, m.message, m.username AS userID, u.username, m.roomname FROM messages AS m INNER JOIN users AS u ON m.username = u.id';
+
       db.connection.query(sql, function(err, rows, fields) {
         if (err) { throw err; }
         callback(err, rows);

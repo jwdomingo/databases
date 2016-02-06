@@ -89,11 +89,12 @@ var app = {
 
         // Get the last message
         var mostRecentMessage = messages[messages.length - 1];
+
         var displayedRoom = $('.chat span').first().data('roomname');
         app.stopSpinner();
 
         // Only bother updating the DOM if we have a new message
-        if (mostRecentMessage.objectId !== app.lastMessageId || app.roomname !== displayedRoom) {
+        if (mostRecentMessage.id !== app.lastMessageId || app.roomname !== displayedRoom) {
           // Update the UI with the fetched rooms
           app.populateRooms(messages);
 
@@ -101,7 +102,7 @@ var app = {
           app.populateMessages(messages, animate);
 
           // Store the ID of the most recent message
-          app.lastMessageId = mostRecentMessage.objectId;
+          app.lastMessageId = mostRecentMessage.id;
         }
       },
       error: function(data) {
